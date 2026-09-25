@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROMPT 2 POSTER — SES Polytechnic, Solapur</title>
+  <meta name="description" content="A PROMPT-TO-POSTER CHALLENGE by SES Polytechnic, Solapur.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    // === ICON COMPONENTS ===
+    const IconMenu = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    );
+
+    const IconX = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    );
+
+    const IconArrowUp = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    );
+
+    const IconClock = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+    );
+
+    const IconPen = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+        <path d="M2 2l7.586 7.586"></path>
+        <circle cx="11" cy="11" r="2"></circle>
+      </svg>
+    );
+
+    const IconTarget = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <circle cx="12" cy="12" r="10"></circle>
+        <circle cx="12" cy="12" r="6"></circle>
+        <circle cx="12" cy="12" r="2"></circle>
+      </svg>
+    );
+
+    const IconStar = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+    );
+
+    const IconEye = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+        <circle cx="12" cy="12" r="3"></circle>
+      </svg>
+    );
+
+    const IconCheck = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    );
+
+    const IconChevronDown = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    );
+
+    const IconShield = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      </svg>
+    );
+
+    const IconFileText = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="16" y1="13" x2="8" y2="13"></line>
+        <line x1="16" y1="17" x2="8" y2="17"></line>
+        <polyline points="10 9 9 9 8 9"></polyline>
+      </svg>
+    );
+
+    const IconAlertCircle = (props) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" width="24" height="24" {...props}>
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+    );
+
+    // === CUSTOM HOOKS ===
+    function useInView(options = {}) {
+      const [ref, setRef] = useState(null);
+      const [isVisible, setIsVisible] = useState(false);
+      
+      useEffect(() => {
+        if (!ref) return;
+        const observer = new IntersectionObserver(([entry]) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            observer.unobserve(ref);
+          }
+        }, { threshold: 0.1, ...options });
+        observer.observe(ref);
+        return () => observer.disconnect();
+      }, [ref, options]);
+      
+      return [setRef, isVisible];
+    }
+
+    function useScrollPosition() {
+      const [scrollY, setScrollY] = useState(0);
+      useEffect(() => {
+        const handle = () => setScrollY(window.scrollY);
+        window.addEventListener('scroll', handle, { passive: true });
+        handle(); // initial check
+        return () => window.removeEventListener('scroll', handle);
+      }, []);
+      return scrollY;
+    }
+
+    // === DATA STRUCTURES ===
+    const NAV_ITEMS = [
+      { id: 'overview', label: 'Overview' },
+      { id: 'schedule', label: 'Schedule' },
+      { id: 'rounds', label: 'Rounds' },
+      { id: 'rulebook', label: 'Rulebook' },
+      { id: 'judging', label: 'Judging' },
+    ];
+
+    const SCHEDULE_DATA = [
+      {
+        time: '10:00 AM',
+        title: 'Participant Arrival',
+        details: 'Arrival time for all registered participants.',
+        duration: null
+      },
+      {
+        time: '10:00 AM – 11:00 AM',
+        title: 'Attendance & Setup',
+        details: 'Attendance marking and operational setup for the competition.',
+        duration: '1 hour'
+      },
+      {
+        time: '11:00 AM – 11:30 AM',
+        title: '1st Round',
+        details: 'Written prompt — 5 minutes. Poster creation — 5 minutes.',
+        duration: '30 min',
+        highlight: true
+      },
+      {
+        time: '11:30 AM – 12:00 PM',
+        title: 'Break',
+        details: '30-minute break for refreshments and Round 1 result compilation.',
+        duration: '30 min'
+      },
+      {
+        time: '12:00 PM – 12:30 PM',
+        title: '2nd Round',
+        details: 'Written prompt — 5 minutes. Poster creation — 5 minutes.',
+        duration: '30 min',
+        highlight: true
+      },
+      {
+        time: '1:00 PM – 2:00 PM',
+        title: 'Conclusion & Awards',
+        details: 'Prize distribution ceremony and official event conclusion.',
+        duration: '1 hour'
+      }
+    ];
+
+    const RULES_DATA = [
+      { number: 1, title: 'Follow Event Instructions', description: 'General participation and event instructions must be followed at all times.' },
+      { number: 2, title: 'Arrive on Time', description: 'Participants must report at the venue before the scheduled start time.' },
+      { number: 3, title: 'Carry Valid ID', description: 'Participants must carry their valid college ID card.' },
+      { number: 4, title: 'Individual Participation', description: 'Participation is individual. No team entries are permitted.' },
+      { number: 5, title: 'Follow Coordinator Instructions', description: 'Participants must follow instructions given by event coordinators and judges.' },
+      { number: 6, title: 'No Misconduct', description: 'Any form of misconduct, cheating or unfair practice may result in disqualification.' },
+      { number: 8, title: 'Approved Systems Only', description: 'Participants must use only the computer/system provided or approved by the organizers.' },
+      { number: 11, title: 'Restricted Internet Access', description: 'Internet access will be allowed only for activities permitted by the organizers.' },
+      { number: 15, title: 'Write Your Own Prompt', description: 'The prompt must be written by the participant during the allotted time.' },
+      { number: 16, title: 'No Pre-Prepared Prompts', description: 'Participants must not copy prompts prepared before the event.' },
+      { number: 20, title: 'Strict Time Limits', description: 'Each round will have a strict time limit that must be respected.' },
+      { number: 21, title: 'Stop When Called', description: 'Participants must stop working immediately when the coordinator announces that time is over.' },
+      { number: 25, title: 'Follow the Theme', description: 'The poster must be created according to the theme/topic provided during the event.' },
+      { number: 29, title: 'No Late Modifications', description: 'Once the submission deadline has passed, no modifications will be accepted.' }
+    ];
+
+    const JUDGING_DATA = [
+      { title: 'Prompt Quality', description: 'How clearly and effectively the participant communicates the intended visual outcome.', icon: 'pen' },
+      { title: 'Creativity', description: 'Originality and creative thinking demonstrated throughout the process.', icon: 'star' },
+      { title: 'Visual Result', description: 'Quality and relevance of the final poster output.', icon: 'eye' },
+      { title: 'Theme Relevance', description: 'How well the output addresses the assigned topic or theme.', icon: 'target' },
+      { title: 'Time Discipline', description: 'Adherence to the allotted time for each phase of the round.', icon: 'clock' }
+    ];
+
+    // === COMPONENTS ===
+
+    const RevealWrapper = ({ children, className = '', delay = 0 }) => {
+      const [ref, isVisible] = useInView();
+      return (
+        <div ref={ref} className={`reveal ${isVisible ? 'visible' : ''} reveal-delay-${delay} ${className}`}>
+          {children}
+        </div>
+      );
+    };
+
+    const Navbar = () => {
+      const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+      const [activeSection, setActiveSection] = useState('');
+      
+      useEffect(() => {
+        const observers = [];
+        const sections = NAV_ITEMS.map(item => item.id);
+        
+        sections.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  setActiveSection(id);
+                }
+              });
+            }, { rootMargin: '-20% 0px -80% 0px' });
+            observer.observe(el);
+            observers.push({ observer, el });
+          }
+        });
+        
+        return () => {
+          observers.forEach(({ observer, el }) => observer.unobserve(el));
+        };
+      }, []);
+
+      const scrollToSection = (e, id) => {
+        e.preventDefault();
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+          setMobileMenuOpen(false);
+        }
+      };
+
+      return (
+        <nav className="navbar">
+          <div className="container navbar-inner">
+            <a href="#" className="navbar-logo" onClick={(e) => scrollToSection(e, 'root')}>P2P</a>
+            
+            <div className="navbar-links">
+              {NAV_ITEMS.map(item => (
+                <a 
+                  key={item.id} 
+                  href={`#${item.id}`} 
+                  onClick={(e) => scrollToSection(e, item.id)}
+                  className={activeSection === item.id ? 'active' : ''}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+
+            <button 
+              className="navbar-mobile-toggle" 
+              aria-label="Toggle menu" 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <IconX /> : <IconMenu />}
+            </button>
+          </div>
+
+          {mobileMenuOpen && (
+            <div className="navbar-mobile-menu">
+              {NAV_ITEMS.map(item => (
+                <a 
+                  key={item.id} 
+                  href={`#${item.id}`} 
+                  onClick={(e) => scrollToSection(e, item.id)}
+                  className={activeSection === item.id ? 'active' : ''}
+                >
+                  {item.label}
+                </a>
+              ))}
+              <hr className="divider-thin" style={{ margin: '1rem 0' }} />
+              <a href="#submission" onClick={(e) => scrollToSection(e, 'submission')}>Submission</a>
+            </div>
+          )}
+        </nav>
+      );
+    };
+
+    const Hero = () => {
+      return (
+        <section className="hero section">
+          <div className="container hero-content">
+            <div className="hero-title-block">
+              <h1 className="hero-title">
+                <span className="hero-title-line hero-title-prompt hero-anim-1">PROMPT</span>
+                <span className="hero-title-line hero-title-two hero-anim-2">2</span>
+                <span className="hero-title-line hero-title-poster hero-anim-3">POSTER</span>
+              </h1>
+              <p className="hero-subtitle hero-anim-4 mono text-stone">A PROMPT-TO-POSTER CHALLENGE</p>
+              <p className="hero-tagline hero-anim-4 text-navy">"Think it. Prompt it. Design it."</p>
+              <div className="hero-org hero-anim-5">
+                <p className="hero-org-name">SOLAPUR EDUCATION SOCIETY'S POLYTECHNIC</p>
+                <p className="hero-org-detail">SES POLYTECHNIC • SOLAPUR, MAHARASHTRA</p>
+              </div>
+              <div className="hero-anim-5" style={{ marginTop: '2rem' }}>
+                <a href="#rulebook" className="neo-btn" onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById('rulebook').scrollIntoView({ behavior: 'smooth' });
+                }}>
+                  Explore Rules &rarr;
+                </a>
+              </div>
+            </div>
+            
+            <div className="hero-decorative">
+              <div className="hero-deco-line"></div>
+              <div className="hero-deco-block"></div>
+            </div>
+          </div>
+          
+          <div className="hero-scroll-indicator">
+            <IconChevronDown />
+          </div>
+        </section>
+      );
+    };
+
+    const EventOverview = () => {
+      return (
+        <section id="overview" className="overview section">
+          <div className="container">
+            <RevealWrapper>
+              <h2 className="section-label">THE CHALLENGE</h2>
+              <h3 className="heading-lg overview-intro">What is Prompt 2 Poster?</h3>
+              <p className="body-lg" style={{ marginBottom: '3rem', maxWidth: '800px' }}>
+                A rapid-fire competition testing your ability to translate ideas into visual instructions, and those instructions into final designs.
+              </p>
+            </RevealWrapper>
+            
+            <div className="overview-steps">
+              <RevealWrapper delay={1} className="overview-step neo-card">
+                <div className="overview-step-number display-md">01</div>
+                <h4 className="overview-step-title heading-md">WRITE THE PROMPT</h4>
+                <div className="overview-step-time mono label">5 MINUTES</div>
+                <p className="overview-step-desc body-md">Craft a detailed text prompt based on the provided theme.</p>
+              </RevealWrapper>
+              
+              <RevealWrapper delay={2} className="overview-connector">
+                <span className="display-md">+</span>
+              </RevealWrapper>
+              
+              <RevealWrapper delay={3} className="overview-step neo-card">
+                <div className="overview-step-number display-md">02</div>
+                <h4 className="overview-step-title heading-md">CREATE THE POSTER</h4>
+                <div className="overview-step-time mono label">5 MINUTES</div>
+                <p className="overview-step-desc body-md">Use your prompt and available tools to design the final output.</p>
+              </RevealWrapper>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const Schedule = () => {
+      const [expandedIndex, setExpandedIndex] = useState(null);
+
+      return (
+        <section id="schedule" className="schedule section">
+          <div className="container">
+            <RevealWrapper>
+              <h2 className="section-label">THE DAY</h2>
+              <h3 className="heading-lg">Event Schedule</h3>
+            </RevealWrapper>
+            
+            <div className="schedule-timeline" style={{ marginTop: '3rem' }}>
+              <div className="schedule-line"></div>
+              {SCHEDULE_DATA.map((item, index) => (
+                <RevealWrapper key={index} delay={index % 3 + 1} className={`schedule-item ${item.highlight ? 'schedule-item-highlight neo-card bg-beige' : ''}`}>
+                  <div className="schedule-item-content" onClick={() => setExpandedIndex(expandedIndex === index ? null : index)} style={{ cursor: 'pointer', position: 'relative' }}>
+                    <div className="schedule-time mono label">{item.time}</div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h4 className="schedule-title heading-md">{item.title}</h4>
+                      <button className="schedule-expand-btn" aria-label="Toggle details">
+                        {expandedIndex === index ? <IconX /> : <IconChevronDown />}
+                      </button>
+                    </div>
+                    {expandedIndex === index && (
+                      <div className="schedule-details-expanded" style={{ marginTop: '1rem' }}>
+                        <p className="body-md">{item.details}</p>
+                        {item.duration && <p className="mono label" style={{ marginTop: '0.5rem' }}>Duration: {item.duration}</p>}
+                      </div>
+                    )}
+                  </div>
+                </RevealWrapper>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const RoundSection = () => {
+      return (
+        <section id="rounds" className="round-section section">
+          <div className="container">
+            <RevealWrapper delay={1} className="round-section--one bg-navy text-cream neo-card-lg" style={{ marginBottom: '2rem' }}>
+              <div className="round-header">
+                <div className="round-number display-xl" style={{ opacity: 0.2 }}>01</div>
+                <h3 className="round-title heading-lg">ROUND ONE</h3>
+              </div>
+              <div className="round-content">
+                <p className="round-desc body-lg">Participants will receive the given topic/theme.</p>
+                <div className="round-phases">
+                  <div className="round-phase neo-card bg-cream text-navy">
+                    <div className="round-phase-label heading-md">PROMPT</div>
+                    <div className="round-phase-time mono display-sm">5 MIN</div>
+                  </div>
+                  <div className="round-plus display-md">+</div>
+                  <div className="round-phase neo-card bg-cream text-navy">
+                    <div className="round-phase-label heading-md">POSTER</div>
+                    <div className="round-phase-time mono display-sm">5 MIN</div>
+                  </div>
+                </div>
+              </div>
+            </RevealWrapper>
+
+            <RevealWrapper delay={2} className="round-section--two bg-burgundy text-cream neo-card-lg">
+              <div className="round-header">
+                <div className="round-badge mono label" style={{ background: '#fff', color: '#800020', padding: '0.25rem 0.5rem', display: 'inline-block', marginBottom: '1rem' }}>SELECTED PARTICIPANTS</div>
+                <div className="round-number display-xl" style={{ opacity: 0.2 }}>02</div>
+                <h3 className="round-title heading-lg">ROUND TWO</h3>
+              </div>
+              <div className="round-content">
+                <p className="round-desc body-lg">Selected participants will receive a NEW challenge.</p>
+                <div className="round-phases">
+                  <div className="round-phase neo-card bg-cream text-burgundy">
+                    <div className="round-phase-label heading-md">PROMPT</div>
+                    <div className="round-phase-time mono display-sm">5 MIN</div>
+                  </div>
+                  <div className="round-plus display-md">+</div>
+                  <div className="round-phase neo-card bg-cream text-burgundy">
+                    <div className="round-phase-label heading-md">POSTER</div>
+                    <div className="round-phase-time mono display-sm">5 MIN</div>
+                  </div>
+                </div>
+              </div>
+            </RevealWrapper>
+          </div>
+        </section>
+      );
+    };
+
+    const PromptIntegrity = () => {
+      return (
+        <section id="prompt-integrity" className="prompt-integrity section">
+          <div className="container">
+            <RevealWrapper>
+              <h2 className="section-label">INTEGRITY</h2>
+              <h3 className="prompt-integrity-title heading-lg">Write Your Own Prompt.</h3>
+              <blockquote className="prompt-integrity-quote heading-md" style={{ borderLeft: '4px solid #800020', paddingLeft: '1.5rem', margin: '2rem 0', fontStyle: 'italic' }}>
+                "The goal is to test your ability to think, structure and communicate an idea through prompting."
+              </blockquote>
+              <ul className="prompt-integrity-points body-lg">
+                <li style={{ marginBottom: '1rem' }}><IconCheck style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> The prompt must be written during the allotted time.</li>
+                <li style={{ marginBottom: '1rem' }}><IconX style={{ verticalAlign: 'middle', marginRight: '0.5rem', color: 'red' }} /> Pre-prepared prompts must not be copied or used.</li>
+                <li><IconStar style={{ verticalAlign: 'middle', marginRight: '0.5rem' }} /> Original thinking is what this competition rewards.</li>
+              </ul>
+            </RevealWrapper>
+          </div>
+        </section>
+      );
+    };
+
+    const TimeStructure = () => {
+      return (
+        <section className="time-structure section">
+          <div className="container">
+            <RevealWrapper>
+              <h2 className="section-label">TIME CONTROL</h2>
+              <h3 className="heading-lg">Every Second Counts</h3>
+              
+              <div className="time-blocks" style={{ display: 'flex', gap: '1rem', marginTop: '3rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                <div className="time-block neo-card" style={{ flex: 1, minWidth: '150px', textAlign: 'center' }}>
+                  <div className="time-block-number display-md">5</div>
+                  <div className="time-block-unit mono">MIN</div>
+                  <div className="time-block-label heading-sm">PROMPT</div>
+                </div>
+                <div className="time-block-plus display-md">+</div>
+                <div className="time-block neo-card" style={{ flex: 1, minWidth: '150px', textAlign: 'center' }}>
+                  <div className="time-block-number display-md">5</div>
+                  <div className="time-block-unit mono">MIN</div>
+                  <div className="time-block-label heading-sm">POSTER</div>
+                </div>
+                <div className="time-block-equals display-md">=</div>
+                <div className="time-block time-block--total neo-card bg-ink text-cream" style={{ flex: 1, minWidth: '150px', textAlign: 'center' }}>
+                  <div className="time-block-number display-md">10</div>
+                  <div className="time-block-unit mono">MIN</div>
+                  <div className="time-block-label heading-sm">TOTAL ROUND</div>
+                </div>
+              </div>
+              
+              <div className="time-progress" style={{ height: '8px', background: '#e0e0e0', marginTop: '2rem', borderRadius: '4px', overflow: 'hidden' }}>
+                <div className="time-progress-fill bg-burgundy" style={{ width: '100%', height: '100%', animation: 'progress 10s linear infinite' }}></div>
+              </div>
+              <style dangerouslySetInnerHTML={{__html: `
+                @keyframes progress {
+                  0% { width: 0%; }
+                  100% { width: 100%; }
+                }
+              `}} />
+            </RevealWrapper>
+          </div>
+        </section>
+      );
+    };
+
+    const Rulebook = () => {
+      const [expandedRule, setExpandedRule] = useState(null);
+
+      return (
+        <section id="rulebook" className="rulebook section bg-cream">
+          <div className="container">
+            <RevealWrapper>
+              <div className="rulebook-header" style={{ marginBottom: '3rem' }}>
+                <h2 className="section-label">THE RULES</h2>
+                <h3 className="heading-lg">Rulebook</h3>
+                <div className="rulebook-count mono label">{RULES_DATA.length} official rules</div>
+              </div>
+            </RevealWrapper>
+
+            <div className="rulebook-grid" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {RULES_DATA.map((rule, index) => {
+                const isExpanded = expandedRule === index;
+                return (
+                  <RevealWrapper key={index} delay={index % 4}>
+                    <div 
+                      className={`rule-item neo-card ${isExpanded ? 'expanded bg-beige' : 'bg-white'}`} 
+                      style={{ cursor: 'pointer', borderLeft: isExpanded ? '4px solid #800020' : '2px solid #1a1a1a' }}
+                      onClick={() => setExpandedRule(isExpanded ? null : index)}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                          <span className="rule-number mono heading-md" style={{ color: '#800020' }}>{String(rule.number).padStart(2, '0')}</span>
+                          <h4 className="rule-title heading-md" style={{ margin: 0 }}>{rule.title}</h4>
+                        </div>
+                      </div>
+                      {isExpanded && (
+                        <div className="rule-content" style={{ marginTop: '1rem', paddingLeft: '3.5rem' }}>
+                          <p className="rule-desc body-md">{rule.description}</p>
+                        </div>
+                      )}
+                    </div>
+                  </RevealWrapper>
+                )
+              })}
+            </div>
+            
+            <RevealWrapper delay={2}>
+              <div className="neo-card bg-ivory" style={{ marginTop: '2rem', border: '2px dashed #1a1a1a' }}>
+                <h4 className="heading-sm" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <IconAlertCircle /> Important Reminder
+                </h4>
+                <p className="body-sm" style={{ marginTop: '0.5rem' }}>This is an official summary. The event coordinator's decision is final in all matters.</p>
+              </div>
+            </RevealWrapper>
+          </div>
+        </section>
+      );
+    };
+
+    const Submission = () => {
+      return (
+        <section id="submission" className="submission section">
+          <div className="container">
+            <RevealWrapper>
+              <h2 className="section-label">DELIVERABLES</h2>
+              <h3 className="heading-lg" style={{ marginBottom: '3rem' }}>Final Submission</h3>
+            </RevealWrapper>
+            
+            <div className="submission-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
+              {[
+                { title: 'Follow the Theme', desc: 'Create the poster according to the assigned theme.', icon: <IconTarget /> },
+                { title: 'Respect the Clock', desc: 'Follow the given time limit strictly.', icon: <IconClock /> },
+                { title: 'Submit on Time', desc: 'Submit before the deadline.', icon: <IconFileText /> },
+                { title: 'No Late Changes', desc: 'No modifications will be accepted after submission.', icon: <IconX /> }
+              ].map((item, i) => (
+                <RevealWrapper key={i} delay={i + 1} className="submission-item neo-card">
+                  <div className="submission-icon" style={{ marginBottom: '1rem' }}>{item.icon}</div>
+                  <h4 className="submission-item-title heading-md">{item.title}</h4>
+                  <p className="submission-item-desc body-md">{item.desc}</p>
+                </RevealWrapper>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const JudgingCriteria = () => {
+      const getIcon = (name) => {
+        switch(name) {
+          case 'pen': return <IconPen />;
+          case 'star': return <IconStar />;
+          case 'eye': return <IconEye />;
+          case 'target': return <IconTarget />;
+          case 'clock': return <IconClock />;
+          default: return <IconStar />;
+        }
+      };
+
+      return (
+        <section id="judging" className="judging section bg-navy text-cream">
+          <div className="container">
+            <RevealWrapper>
+              <h2 className="section-label" style={{ color: '#d0d0d0' }}>EVALUATION</h2>
+              <h3 className="heading-lg">What Matters</h3>
+              <p className="body-lg" style={{ marginBottom: '3rem' }}>These are the areas that will be considered during evaluation.</p>
+            </RevealWrapper>
+
+            <div className="judging-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem' }}>
+              {JUDGING_DATA.map((item, i) => (
+                <RevealWrapper key={i} delay={i + 1} className="judging-card neo-card bg-cream text-navy" data-index={i + 1}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                    <div style={{ padding: '0.5rem', background: '#800020', color: '#fff', borderRadius: '4px' }}>
+                      {getIcon(item.icon)}
+                    </div>
+                    <h4 className="judging-card-title heading-md" style={{ margin: 0 }}>{item.title}</h4>
+                  </div>
+                  <p className="judging-card-desc body-md">{item.description}</p>
+                </RevealWrapper>
+              ))}
+            </div>
+            
+            <RevealWrapper delay={3}>
+              <div className="mono label" style={{ marginTop: '3rem', textAlign: 'center', opacity: 0.8 }}>
+                EVENT NOTE: These are evaluation areas, not a fixed scoring formula.
+              </div>
+            </RevealWrapper>
+          </div>
+        </section>
+      );
+    };
+
+    const Disqualification = () => {
+      return (
+        <section id="disqualification" className="disqualification section bg-burgundy text-cream">
+          <div className="container">
+            <RevealWrapper>
+              <div className="disqualification-header" style={{ marginBottom: '2rem' }}>
+                <h2 className="section-label" style={{ color: '#f0f0f0' }}>FAIR PLAY</h2>
+                <h3 className="disqualification-title display-lg">PLAY <span className="disqualification-accent" style={{ color: '#1a1a1a' }}>FAIR.</span></h3>
+              </div>
+              
+              <div className="disqualification-content">
+                <p className="disqualification-text heading-md" style={{ marginBottom: '2rem' }}>
+                  This competition values honesty, effort and integrity.
+                </p>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+                  <IconShield style={{ flexShrink: 0, marginTop: '0.25rem' }} />
+                  <p className="body-lg">
+                    Any form of misconduct, cheating or unfair practice—including pre-written prompts, unauthorized internet use, or ignoring coordinator instructions—may result in disqualification.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="disqualification-note neo-card bg-cream text-burgundy" style={{ marginTop: '3rem', display: 'inline-block' }}>
+                <h4 className="heading-sm">Event Note</h4>
+                <p className="body-sm">The goal is fair participation, not punishment.</p>
+              </div>
+            </RevealWrapper>
+          </div>
+        </section>
+      );
+    };
+
+    const Footer = () => {
+      return (
+        <footer className="footer section bg-ink text-cream" style={{ padding: '4rem 0' }}>
+          <div className="container footer-content" style={{ textAlign: 'center' }}>
+            <h2 className="footer-title display-md">PROMPT 2 POSTER</h2>
+            <p className="footer-org heading-sm" style={{ marginTop: '1rem' }}>SES Polytechnic, Solapur</p>
+            <p className="footer-tagline mono label" style={{ marginTop: '0.5rem', opacity: 0.7 }}>"Think it. Prompt it. Design it."</p>
+            <hr className="footer-line divider-thin" style={{ borderColor: '#800020', margin: '2rem auto', maxWidth: '100px' }} />
+            <p className="footer-copy body-sm" style={{ opacity: 0.5 }}>© {new Date().getFullYear()} PROMPT 2 POSTER Event.</p>
+          </div>
+        </footer>
+      );
+    };
+
+    const BackToTop = () => {
+      const scrollY = useScrollPosition();
+      const isVisible = scrollY > 500;
+
+      const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      return (
+        <button 
+          className={`back-to-top neo-btn ${isVisible ? 'visible' : ''}`}
+          onClick={scrollToTop}
+          aria-label="Back to top"
+          style={{
+            position: 'fixed',
+            bottom: '2rem',
+            right: '2rem',
+            padding: '1rem',
+            borderRadius: '50%',
+            opacity: isVisible ? 1 : 0,
+            pointerEvents: isVisible ? 'auto' : 'none',
+            transition: 'opacity 0.3s ease',
+            zIndex: 100
+          }}
+        >
+          <IconArrowUp />
+        </button>
+      );
+    };
+
+    const App = () => {
+      return (
+        <React.Fragment>
+          <Navbar />
+          <main>
+            <Hero />
+            <EventOverview />
+            <Schedule />
+            <RoundSection />
+            <PromptIntegrity />
+            <TimeStructure />
+            <Rulebook />
+            <Submission />
+            <JudgingCriteria />
+            <Disqualification />
+          </main>
+          <Footer />
+          <BackToTop />
+        </React.Fragment>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
